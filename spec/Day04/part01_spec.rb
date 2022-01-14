@@ -13,7 +13,7 @@ class BingoGame
   private
 
   def has_winning_row?(board)
-    board[0].all?{|x| @drawnNumbers.include?(x)}
+    board.any?{|row| row.all?{|x| @drawnNumbers.include?(x)}}
   end
 
 end
@@ -24,7 +24,7 @@ RSpec.describe BingoGame do
     bingo_game_new = BingoGame.new([22, 44], [
       [[1,2],[3,4]],
       [[1,2],[3,4]],
-      [[22,44],[66,77]]
+      [[66,77],[22,44]]
     ])
     expect(bingo_game_new.score).to be(2)
   end
