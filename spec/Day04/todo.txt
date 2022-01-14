@@ -6,8 +6,8 @@ read input
 
 
 each number drawn is marked on each board
-    a board is winning when a row is all marked (check)
-    a board is winning when a column is all marked
+    a board is winning when a row is all marked (done)
+    a board is winning when a column is all marked (done)
 
            (done)              (done)
 solution = last_number_drawn * score_of_winning_board
