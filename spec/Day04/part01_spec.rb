@@ -12,17 +12,25 @@ class BingoGame
     last_winning_score = 0
     @number_sequence.each do |number|
       drawn_numbers << number
-      winning_boards = @boards.find_all{|board| has_winning_row?(board, drawn_numbers) || has_winning_column?(board, drawn_numbers)}
+      winning_boards = winning_boards_from(drawn_numbers)
 
-      winning_boards.select{|w| !previous_winning_boards.include?(w)}.each do |w|
-        previous_winning_boards << w
-        last_winning_score = score_from(w, drawn_numbers) * number
+      new_winners(previous_winning_boards, winning_boards).each do |winning_board|
+        previous_winning_boards << winning_board
+        last_winning_score = score_from(winning_board, drawn_numbers) * number
       end
     end
     last_winning_score
   end
 
   private
+
+  def winning_boards_from(drawn_numbers)
+    @boards.find_all { |board| has_winning_row?(board, drawn_numbers) || has_winning_column?(board, drawn_numbers) }
+  end
+
+  def new_winners(previous_winning_boards, winning_boards)
+    winning_boards.select { |w| !previous_winning_boards.include?(w) }
+  end
 
   def has_winning_row?(board, drawn_numbers)
     board.any?{|row| row.all?{|n| has_been_drawn?(n, drawn_numbers)}}
@@ -32,12 +40,12 @@ class BingoGame
     board.transpose.any?{|column| column.all?{|n| has_been_drawn?(n, drawn_numbers)}}
   end
 
-  def score_from(winning_board, drawn_numbers)
-    winning_board.flatten.reject{|n| has_been_drawn?(n, drawn_numbers)}.sum
-  end
-
   def has_been_drawn?(n, drawn_numbers)
     drawn_numbers.include?(n)
+  end
+
+  def score_from(winning_board, drawn_numbers)
+    winning_board.flatten.reject{|n| has_been_drawn?(n, drawn_numbers)}.sum
   end
 end
 
