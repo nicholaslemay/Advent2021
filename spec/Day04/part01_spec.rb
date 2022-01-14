@@ -35,8 +35,14 @@ class BingoGame
 end
 
 class BingoInput
-  def self.from(filename)
+  attr_accessor :number_sequence
 
+  def initialize
+    self.number_sequence = []
+  end
+
+  def self.from(filename)
+    return BingoInput.new
   end
 end
 
@@ -45,6 +51,7 @@ RSpec.describe BingoInput do
   it "return the number sequence to play with" do
     bingo_input = BingoInput.from('sample.txt')
 
+    expect(bingo_input.number_sequence).not_to be(nil)
   end
 end
 
