@@ -1,12 +1,14 @@
 require_relative '../spec_helper'
 
 class BingoGame
+  def score
+  end
 end
 
 RSpec.describe BingoGame do
 
-  it "can be created" do
-    BingoGame.new
+  it "returns a bogus score by default" do
+    expect(BingoGame.new.score).to be(nil)
   end
 
 end
