@@ -76,8 +76,13 @@ RSpec.describe "Feature" do
     sample_game = BingoGame.new(input.number_sequence, input.boards)
     expect(sample_game.score).to be(4512)
   end
-end
 
+  it "solves my personal riddle" do
+    input = BingoInput.from('./spec/Day04/input.txt')
+    sample_game = BingoGame.new(input.number_sequence, input.boards)
+    expect(sample_game.score).to be(87456)
+  end
+end
 
 RSpec.describe BingoInput do
 
