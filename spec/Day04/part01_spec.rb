@@ -74,7 +74,7 @@ RSpec.describe "Feature" do
   it "solves the sample riddle" do
     input = BingoInput.from('./spec/Day04/sample.txt')
     sample_game = BingoGame.new(input.number_sequence, input.boards)
-    expect(sample_game.score).to be(4512)
+    expect(sample_game.score).to be(1924)
   end
 
   it "solves my personal riddle" do
@@ -105,9 +105,9 @@ end
 
 RSpec.describe BingoGame do
 
-  describe "a winning board by row" do
+  describe "a single winning board by row" do
     it "scores is the last number drawn * the sum of winning's board undrawn numbers" do
-      bingo_game_new = BingoGame.new([22, 44, 77], [
+      bingo_game_new = BingoGame.new([22, 44, 19], [
         [[1,2],[3,4]],
         [[1,2],[3,4]],
         [[66,77],[22,44]]
