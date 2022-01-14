@@ -1,9 +1,12 @@
 require_relative '../spec_helper'
 
-RSpec.describe "Game management" do
+class BingoGame
+end
 
-  it "do the do" do
-    expect(true).to be(true)
+RSpec.describe BingoGame do
+
+  it "can be created" do
+    BingoGame.new
   end
 
 end
