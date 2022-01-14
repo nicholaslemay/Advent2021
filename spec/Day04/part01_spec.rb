@@ -8,11 +8,18 @@ class BingoGame
 
   def score
     drawn_numbers = []
+    previous_winning_boards = []
+    last_winning_score = 0
     @number_sequence.each do |number|
       drawn_numbers << number
-      winning_board = @boards.find{|board| has_winning_row?(board, drawn_numbers) || has_winning_column?(board, drawn_numbers)}
-      return score_from(winning_board, drawn_numbers) * number if winning_board
+      winning_boards = @boards.find_all{|board| has_winning_row?(board, drawn_numbers) || has_winning_column?(board, drawn_numbers)}
+
+      winning_boards.select{|w| !previous_winning_boards.include?(w)}.each do |w|
+        previous_winning_boards << w
+        last_winning_score = score_from(w, drawn_numbers) * number
+      end
     end
+    last_winning_score
   end
 
   private
@@ -80,7 +87,7 @@ RSpec.describe "Feature" do
   it "solves my personal riddle" do
     input = BingoInput.from('./spec/Day04/input.txt')
     sample_game = BingoGame.new(input.number_sequence, input.boards)
-    expect(sample_game.score).to be(87456)
+    expect(sample_game.score).to be(15561)
   end
 end
 
@@ -126,6 +133,18 @@ RSpec.describe BingoGame do
     end
   end
 
+  describe "with two winners" do
+    it "considers the last winner the true winner" do
+      bingo_game_new = BingoGame.new([7, 8, 1, 2, 18], [
+        [[1,2],
+         [3,7]],
+
+        [[7,2],
+         [8,4]],
+      ])
+      expect(bingo_game_new.score).to eq(2 * (3))
+    end
+  end
 end
 
 
