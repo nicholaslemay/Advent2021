@@ -21,7 +21,6 @@ class BingoGame
     board.any?{|row| row.all?{|n| has_been_drawn?(n, drawn_numbers)}}
   end
 
-
   def has_winning_column?(board, drawn_numbers)
     board.transpose.any?{|column| column.all?{|n| has_been_drawn?(n, drawn_numbers)}}
   end
@@ -34,6 +33,21 @@ class BingoGame
     drawn_numbers.include?(n)
   end
 end
+
+class BingoInput
+  def self.from(filename)
+
+  end
+end
+
+RSpec.describe BingoInput do
+
+  it "return the number sequence to play with" do
+    bingo_input = BingoInput.from('sample.txt')
+
+  end
+end
+
 
 RSpec.describe BingoGame do
 
@@ -59,3 +73,5 @@ RSpec.describe BingoGame do
   end
 
 end
+
+
