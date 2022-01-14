@@ -36,15 +36,18 @@ end
 
 class BingoInput
   attr_accessor :number_sequence
+  attr_accessor :boards
 
-  def initialize(number_sequence)
+  def initialize(number_sequence, boards)
     self.number_sequence = number_sequence
+    self.boards = boards
   end
+
 
   def self.from(filename)
     lines = File.readlines(filename)
-
-    return BingoInput.new(number_sequence_from(lines))
+    boards = boards_from(lines)
+    return BingoInput.new(number_sequence_from(lines), boards)
   end
 
   private
@@ -52,6 +55,15 @@ class BingoInput
   def self.number_sequence_from(lines)
     lines[0].split(',').map(&:to_i)
   end
+
+  def self.boards_from(lines)
+    boards = []
+    lines.drop(1).each_slice(6) do |board_lines|
+      boards << board_lines
+    end
+    boards
+  end
+
 end
 
 RSpec.describe BingoInput do
@@ -60,6 +72,12 @@ RSpec.describe BingoInput do
     bingo_input = BingoInput.from('./spec/Day04/sample.txt')
 
     expect(bingo_input.number_sequence).to match_array([7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1])
+  end
+
+  it "returns the boards to play with" do
+    bingo_input = BingoInput.from('./spec/Day04/sample.txt')
+
+    expect(bingo_input.boards.length).to be(3)
   end
 end
 
