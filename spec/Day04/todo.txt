@@ -1,0 +1,15 @@
+read input
+    first line is series of numbers drawn
+    rest, by groups of 5 * 5 are boards
+
+    input has ~100 boards
+
+
+each number drawn is marked on each board
+    a board is winning when a row is all marked
+    a board is winning when a column is all marked
+
+solution = last_number_drawn * score_of_winning_board
+
+score_of_winning_board = sum(unmarked_numbers)
+
