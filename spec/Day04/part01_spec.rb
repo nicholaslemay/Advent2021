@@ -59,7 +59,11 @@ class BingoInput
   def self.boards_from(lines)
     boards = []
     lines.drop(1).each_slice(6) do |board_lines|
-      boards << board_lines
+      board = []
+      board_lines.drop(1).each do |line|
+        board << line.split(' ').map(&:to_i)
+      end
+      boards << board
     end
     boards
   end
@@ -78,9 +82,12 @@ RSpec.describe BingoInput do
     bingo_input = BingoInput.from('./spec/Day04/sample.txt')
 
     expect(bingo_input.boards.length).to be(3)
+
+    expect(bingo_input.boards[0].length).to be(5)
+    expect(bingo_input.boards[0][0][0]).to be(22)
+    expect(bingo_input.boards[0][4][4]).to be(19)
   end
 end
-
 
 RSpec.describe BingoGame do
 
@@ -106,5 +113,7 @@ RSpec.describe BingoGame do
   end
 
 end
+
+
 
 

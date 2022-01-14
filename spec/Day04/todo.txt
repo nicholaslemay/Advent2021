@@ -1,6 +1,6 @@
 read input
-    first line is series of numbers drawn
-    rest, by groups of 5 * 5 are boards
+    first line is series of numbers drawn (done)
+    rest, by groups of 5 * 5 are boards (done)
 
     input has ~100 boards
 
@@ -14,3 +14,6 @@ solution = last_number_drawn * score_of_winning_board
 
 score_of_winning_board = sum(unmarked_numbers)
 
+
+
+Show game works based on sample
