@@ -70,6 +70,15 @@ class BingoInput
 
 end
 
+RSpec.describe "Feature" do
+  it "solves the sample riddle" do
+    input = BingoInput.from('./spec/Day04/sample.txt')
+    sample_game = BingoGame.new(input.number_sequence, input.boards)
+    expect(sample_game.score).to be(4512)
+  end
+end
+
+
 RSpec.describe BingoInput do
 
   it "return the number sequence to play with" do
@@ -113,6 +122,7 @@ RSpec.describe BingoGame do
   end
 
 end
+
 
 
 
