@@ -9,6 +9,7 @@ each number drawn is marked on each board
     a board is winning when a row is all marked (check)
     a board is winning when a column is all marked
 
+           (done)              (done)
 solution = last_number_drawn * score_of_winning_board
 
 score_of_winning_board = sum(unmarked_numbers)

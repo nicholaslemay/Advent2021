@@ -10,10 +10,9 @@ class BingoGame
     drawn_numbers = []
     @number_sequence.each do |number|
       drawn_numbers << number
-      winning_index = @boards.find_index{|board| has_winning_row?(board, drawn_numbers)}
-      return winning_index * number if winning_index
+      winning_board = @boards.find{|board| has_winning_row?(board, drawn_numbers)}
+      return score_from(winning_board, drawn_numbers) * number if winning_board
     end
-
   end
 
   private
@@ -22,17 +21,23 @@ class BingoGame
     board.any?{|row| row.all?{|x| drawn_numbers.include?(x)}}
   end
 
+  def score_from(winning_board, drawn_numbers)
+    winning_board.flatten.reject{|x| drawn_numbers.include?(x)}.sum
+  end
+
 end
 
 RSpec.describe BingoGame do
 
-  it "score is the index times the last number of the winning board when won by row" do
-    bingo_game_new = BingoGame.new([22, 44, 77], [
-      [[1,2],[3,4]],
-      [[1,2],[3,4]],
-      [[66,77],[22,44]]
-    ])
-    expect(bingo_game_new.score).to be(2 * 44)
+  describe "a winning board by row" do
+    it "scores is the last number drawn * the sum of winning's board undrawn numbers" do
+      bingo_game_new = BingoGame.new([22, 44, 77], [
+        [[1,2],[3,4]],
+        [[1,2],[3,4]],
+        [[66,77],[22,44]]
+      ])
+      expect(bingo_game_new.score).to be(44 * (66 + 77))
+    end
   end
 
 end
