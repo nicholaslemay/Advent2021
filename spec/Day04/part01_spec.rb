@@ -37,21 +37,29 @@ end
 class BingoInput
   attr_accessor :number_sequence
 
-  def initialize
-    self.number_sequence = []
+  def initialize(number_sequence)
+    self.number_sequence = number_sequence
   end
 
   def self.from(filename)
-    return BingoInput.new
+    lines = File.readlines(filename)
+
+    return BingoInput.new(number_sequence_from(lines))
+  end
+
+  private
+
+  def self.number_sequence_from(lines)
+    lines[0].split(',').map(&:to_i)
   end
 end
 
 RSpec.describe BingoInput do
 
   it "return the number sequence to play with" do
-    bingo_input = BingoInput.from('sample.txt')
+    bingo_input = BingoInput.from('./spec/Day04/sample.txt')
 
-    expect(bingo_input.number_sequence).not_to be(nil)
+    expect(bingo_input.number_sequence).to match_array([7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1])
   end
 end
 
