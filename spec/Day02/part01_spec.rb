@@ -18,6 +18,15 @@ class Submarine
   end
 end
 
+class SubmarineDriver
+  def self.run_from_instructions(sub, file)
+    File.readlines(file).each do |instruction_line|
+      instruction, value = instruction_line.split(' ')
+      sub.send(instruction.to_sym, value.to_i)
+    end
+  end
+end
+
 RSpec.describe "Part 01" do
   let(:sub) { Submarine.new }
 
@@ -50,5 +59,13 @@ RSpec.describe "Part 01" do
     sub.up(3)
     expect(sub.depth).to eq(2)
   end
+end
 
+RSpec.describe "Driving a sub from instruction file" do
+  let(:sub) { Submarine.new }
+  it "can solve the sample" do
+    SubmarineDriver.run_from_instructions(sub,'./spec/Day02/sample.txt')
+    expect(sub.horizontal_position).to eq(15)
+    expect(sub.depth).to eq(10)
+  end
 end
