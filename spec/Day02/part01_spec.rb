@@ -8,6 +8,10 @@ class Submarine
   def forward(increase)
     self.horizontal_position += increase
   end
+
+  def down(increase)
+    self.depth += increase
+  end
 end
 
 RSpec.describe "Part 01" do
@@ -27,6 +31,14 @@ RSpec.describe "Part 01" do
 
   it "has an initial depth of zero" do
     expect(sub.depth).to eq(0)
+  end
+
+  it "can go down in depth " do
+    sub.down(4)
+    expect(sub.depth).to eq(4)
+
+    sub.down(8)
+    expect(sub.depth).to eq(12)
   end
 
 end
