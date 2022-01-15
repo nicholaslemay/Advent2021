@@ -16,6 +16,7 @@ class Submarine
   end
 
   def up(decrease)
+    @aim -= decrease
   end
 end
 
@@ -52,6 +53,14 @@ RSpec.describe "Part 01" do
     expect(sub.depth).to eq(8*5)
   end
 
+  it "with aim decreased by up, moving forward decreases depth based on aim" do
+    sub.down(5)
+    sub.up(2)
+    sub.forward(8)
+    expect(sub.horizontal_position).to eq(8)
+    expect(sub.depth).to eq(8*(5-2))
+  end
+
 end
 
 RSpec.describe "Driving a sub from instruction file" do
@@ -62,9 +71,9 @@ RSpec.describe "Driving a sub from instruction file" do
     expect(sub.depth).to eq(60)
   end
 
-  # it "can solve my personal riddle" do
-  #   SubmarineDriver.run_from_instructions(sub,'./spec/Day02/input.txt')
-  #   expect(sub.horizontal_position).to eq(1906)
-  #   expect(sub.depth).to eq(1017)
-  # end
+  it "can solve my personal riddle" do
+    SubmarineDriver.run_from_instructions(sub,'./spec/Day02/input.txt')
+    expect(sub.horizontal_position).to eq(1906)
+    expect(sub.depth).to eq(1021972)
+  end
 end
