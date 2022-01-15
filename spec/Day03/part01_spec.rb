@@ -1,7 +1,11 @@
 
+class PowerCalculator
+
+end
+
 
 RSpec.describe "Something" do
   it "works" do
-    expect(true).to be(true)
+    PowerCalculator
   end
 end
