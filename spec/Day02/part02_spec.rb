@@ -3,18 +3,19 @@ class Submarine
 
   def initialize
     self.horizontal_position = self.depth = 0
+    @aim = 0
   end
 
   def forward(increase)
     self.horizontal_position += increase
+    self.depth += (increase * @aim)
   end
 
   def down(increase)
-    self.depth += increase
+    @aim += increase
   end
 
   def up(decrease)
-    self.depth -= decrease
   end
 end
 
@@ -42,6 +43,13 @@ RSpec.describe "Part 01" do
     sub.forward(5)
     expect(sub.horizontal_position).to eq(5)
     expect(sub.depth).to eq(0)
+  end
+
+  it "with aim increased by going down, moving forward increases depth based on aim" do
+    sub.down(5)
+    sub.forward(8)
+    expect(sub.horizontal_position).to eq(8)
+    expect(sub.depth).to eq(8*5)
   end
 
 end
