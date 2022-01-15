@@ -68,4 +68,10 @@ RSpec.describe "Driving a sub from instruction file" do
     expect(sub.horizontal_position).to eq(15)
     expect(sub.depth).to eq(10)
   end
+
+  it "can solve my personal riddle" do
+    SubmarineDriver.run_from_instructions(sub,'./spec/Day02/input.txt')
+    expect(sub.horizontal_position).to eq(1906)
+    expect(sub.depth).to eq(1017)
+  end
 end
