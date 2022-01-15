@@ -14,7 +14,7 @@ class PowerCalculator
   end
 end
 
-RSpec.describe "Something" do
+RSpec.describe "PowerCalculator" do
 
   it "gamma rate is the decimal value of the most frequents bits of each entry of the diagnostic" do
     diagnostic = %w[00010 00011 00001]
@@ -26,3 +26,5 @@ RSpec.describe "Something" do
     expect(PowerCalculator.epsilon_rate(diagnostic)).to eq('01010'.to_i(2))
   end
 end
+
+
