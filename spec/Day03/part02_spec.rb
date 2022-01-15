@@ -1,14 +1,17 @@
 class LifeSupportCalculator
   def self.oxygen_generator_rating(diagnostic_entries)
-    diagnostic_entries[0].to_i(2)
+    diagnostic_entries.max_by { |i| diagnostic_entries.count(i) }.to_i(2)
   end
 end
 
 RSpec.describe LifeSupportCalculator do
 
   describe 'oxygen rating' do
-    it 'returns the value of a single diagnostic in decimal directly' do
-      diagnostics = %w(1)
+    it 'returns the most popular diagnostic of a single bit' do
+      diagnostics = %w(1 0 0 1 0)
+      expect(LifeSupportCalculator.oxygen_generator_rating(diagnostics)).to be(0)
+
+      diagnostics = %w(1 1 1 1 0)
       expect(LifeSupportCalculator.oxygen_generator_rating(diagnostics)).to be(1)
     end
   end
