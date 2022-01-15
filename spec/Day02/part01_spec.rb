@@ -12,6 +12,10 @@ class Submarine
   def down(increase)
     self.depth += increase
   end
+
+  def up(decrease)
+    self.depth -= decrease
+  end
 end
 
 RSpec.describe "Part 01" do
@@ -39,6 +43,12 @@ RSpec.describe "Part 01" do
 
     sub.down(8)
     expect(sub.depth).to eq(12)
+  end
+
+  it "can go up in depth " do
+    sub.down(5)
+    sub.up(3)
+    expect(sub.depth).to eq(2)
   end
 
 end
