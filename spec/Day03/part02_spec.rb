@@ -1,6 +1,7 @@
 class LifeSupportCalculator
   def self.oxygen_generator_rating(diagnostic_entries)
-    diagnostic_entries.max_by { |i| diagnostic_entries.count(i) }.to_i(2)
+     diagnostic_entries.count('0') > diagnostic_entries.count('1') ?
+       '0'.to_i(2) : '1'.to_i(2)
   end
 end
 
@@ -12,6 +13,11 @@ RSpec.describe LifeSupportCalculator do
       expect(LifeSupportCalculator.oxygen_generator_rating(diagnostics)).to be(0)
 
       diagnostics = %w(1 1 1 1 0)
+      expect(LifeSupportCalculator.oxygen_generator_rating(diagnostics)).to be(1)
+    end
+
+    it 'in a tie, 1 wins' do
+      diagnostics = %w(0 0 1 1)
       expect(LifeSupportCalculator.oxygen_generator_rating(diagnostics)).to be(1)
     end
   end
