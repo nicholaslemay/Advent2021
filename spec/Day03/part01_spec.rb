@@ -10,7 +10,8 @@ class PowerCalculator
   end
 
   def self.epsilon_rate(diagnostic_entries)
-    self.gamma_rate(diagnostic_entries) ^ '11111'.to_i(2)
+    bitmask = "1" * diagnostic_entries[0].length
+    self.gamma_rate(diagnostic_entries) ^ bitmask.to_i(2)
   end
 end
 
@@ -25,6 +26,11 @@ RSpec.describe "PowerCalculator" do
     diagnostic = %w[10101]
     expect(PowerCalculator.epsilon_rate(diagnostic)).to eq('01010'.to_i(2))
   end
+
+  it "can handle diagnostics of variable lengths" do
+    diagnostic = %w[1010101010]
+    expect(PowerCalculator.epsilon_rate(diagnostic)).to eq('0101010101'.to_i(2))
+  end
 end
 
 
@@ -33,5 +39,11 @@ RSpec.describe "Calculating power from a real diagnostic" do
     diagnostic = File.readlines('./spec/Day03/sample.txt', chomp: true)
     expect(PowerCalculator.epsilon_rate(diagnostic)).to eq(9)
     expect(PowerCalculator.gamma_rate(diagnostic)).to eq(22)
+  end
+
+  it "resolves my personal riddle input" do
+    diagnostic = File.readlines('./spec/Day03/input.txt', chomp: true)
+    expect(PowerCalculator.epsilon_rate(diagnostic)).to eq(1519)
+    expect(PowerCalculator.gamma_rate(diagnostic)).to eq(2576)
   end
 end
