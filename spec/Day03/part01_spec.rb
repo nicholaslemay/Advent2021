@@ -1,11 +1,8 @@
 
 class PowerCalculator
   def self.gamma_rate(diagnostic_entries)
-    most_frequent_bits = ''
     bits_grouped_together = diagnostic_entries.map(&:chars).transpose
-    bits_grouped_together.select do |bits|
-      most_frequent_bits += bits.max_by { |i| bits.count(i) }
-    end
+    most_frequent_bits = bits_grouped_together.collect { |bits| bits.max_by { |i| bits.count(i) } }.join
     most_frequent_bits.to_i(2)
   end
 
@@ -32,7 +29,6 @@ RSpec.describe "PowerCalculator" do
     expect(PowerCalculator.epsilon_rate(diagnostic)).to eq('0101010101'.to_i(2))
   end
 end
-
 
 RSpec.describe "Calculating power from a real diagnostic" do
   it "resolves riddle sample" do
