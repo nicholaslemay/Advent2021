@@ -1,8 +1,8 @@
 class Submarine
-  attr_accessor :horizontal_position
+  attr_accessor :horizontal_position, :depth
 
   def initialize
-    self.horizontal_position = 0
+    self.horizontal_position = self.depth = 0
   end
 
   def forward(increase)
@@ -24,4 +24,9 @@ RSpec.describe "Part 01" do
     sub.forward(8)
     expect(sub.horizontal_position).to eq(13)
   end
+
+  it "has an initial depth of zero" do
+    expect(sub.depth).to eq(0)
+  end
+
 end
