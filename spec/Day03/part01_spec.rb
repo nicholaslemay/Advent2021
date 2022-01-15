@@ -28,3 +28,10 @@ RSpec.describe "PowerCalculator" do
 end
 
 
+RSpec.describe "Calculating power from a real diagnostic" do
+  it "resolves riddle sample" do
+    diagnostic = File.readlines('./spec/Day03/sample.txt', chomp: true)
+    expect(PowerCalculator.epsilon_rate(diagnostic)).to eq(9)
+    expect(PowerCalculator.gamma_rate(diagnostic)).to eq(22)
+  end
+end
