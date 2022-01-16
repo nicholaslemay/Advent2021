@@ -1,10 +1,17 @@
 class LifeSupportCalculator
   def self.oxygen_generator_rating(diagnostic_entries)
-    bits_grouped_together = diagnostic_entries.map(&:chars).transpose
-    most_frequent_bits = bits_grouped_together.collect { |bits|
-      bits.count('0') > bits.count('1') ? '0'.to_i(2) : '1'.to_i(2)
-    }.join
-    most_frequent_bits.to_i(2)
+
+    valid_diagnostics = diagnostic_entries
+    (0...diagnostic_entries[0].length).each do |bit_index|
+      bits_grouped_together = valid_diagnostics.map(&:chars).transpose
+      bits = bits_grouped_together[bit_index]
+      most_frequent_bit = bits.count('0') > bits.count('1') ? '0' : '1'
+      valid_diagnostics = valid_diagnostics.select{|d| d[bit_index] == most_frequent_bit}
+
+      if(valid_diagnostics.length == 1)
+        return valid_diagnostics[0].to_i(2)
+      end
+    end
   end
 end
 
@@ -12,15 +19,15 @@ RSpec.describe LifeSupportCalculator do
 
   describe 'oxygen rating' do
     it 'returns the most popular diagnostic of a single bit' do
-      diagnostics = %w(1 0 0 1 0)
+      diagnostics = %w(0)
       expect(LifeSupportCalculator.oxygen_generator_rating(diagnostics)).to be(0)
 
-      diagnostics = %w(1 1 1 1 0)
+      diagnostics = %w(1)
       expect(LifeSupportCalculator.oxygen_generator_rating(diagnostics)).to be(1)
     end
 
     it 'in a tie, 1 wins' do
-      diagnostics = %w(0 0 1 1)
+      diagnostics = %w(0 1)
       expect(LifeSupportCalculator.oxygen_generator_rating(diagnostics)).to be(1)
     end
 
@@ -29,6 +36,12 @@ RSpec.describe LifeSupportCalculator do
         diagnostics = %w(00 01)
         expect(LifeSupportCalculator.oxygen_generator_rating(diagnostics)).to be(1)
       end
+
+      it 'returns the one diagnostic, matching most frequent bits, from left to right' do
+        diagnostics = %w(101 100 110 000)
+        expect(LifeSupportCalculator.oxygen_generator_rating(diagnostics)).to be('101'.to_i(2))
+      end
+
     end
   end
 end
