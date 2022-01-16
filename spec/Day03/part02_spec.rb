@@ -1,17 +1,33 @@
 class LifeSupportCalculator
+
   def self.oxygen_generator_rating(diagnostic_entries)
+    diagnostic_matching(diagnostic_entries, :most_frequent).to_i(2)
+  end
 
+  def self.scrubber_rating(diagnostic_entries)
+    diagnostic_matching(diagnostic_entries, :least_frequent).to_i(2)
+  end
+
+  private
+
+  def self.diagnostic_matching(diagnostic_entries, strategy)
     valid_diagnostics = diagnostic_entries
-    (0...diagnostic_entries[0].length).each do |bit_index|
-      bits_grouped_together = valid_diagnostics.map(&:chars).transpose
-      bits = bits_grouped_together[bit_index]
-      most_frequent_bit = bits.count('0') > bits.count('1') ? '0' : '1'
-      valid_diagnostics = valid_diagnostics.select{|d| d[bit_index] == most_frequent_bit}
-
-      if(valid_diagnostics.length == 1)
-        return valid_diagnostics[0].to_i(2)
-      end
+    (0...diagnostic_entries[0].length).each do |index|
+      most_frequent_bit = most_frequent_bit(index, valid_diagnostics)
+      valid_diagnostics = valid_diagnostics.select { |d|
+         strategy == :most_frequent ? d[index] == most_frequent_bit : d[index] != most_frequent_bit
+      }
+      return valid_diagnostics[0] if valid_diagnostics.length == 1
     end
+  end
+
+  def self.most_frequent_bit(bit_index, valid_diagnostics)
+    bits_from_column = all_bits_from_column(valid_diagnostics, bit_index)
+    bits_from_column.count('0') > bits_from_column.count('1') ? '0' : '1'
+  end
+
+  def self.all_bits_from_column(valid_diagnostics, bit_index)
+    valid_diagnostics.map(&:chars).transpose[bit_index]
   end
 end
 
@@ -44,6 +60,14 @@ RSpec.describe LifeSupportCalculator do
 
     end
   end
+
+  describe 'scrubber rating' do
+    it "returns the one diagnostic, least matching the most frequent bits, from left to right" do
+      diagnostics = %w(101 110 111 010 000)
+      expect(LifeSupportCalculator.scrubber_rating(diagnostics)).to be('0'.to_i(2))
+    end
+  end
+
 end
 
 RSpec.describe "Calculating the life support from a real diagnostic" do
@@ -51,6 +75,12 @@ RSpec.describe "Calculating the life support from a real diagnostic" do
   it "resolves riddle sample" do
     diagnostic = File.readlines('./spec/Day03/sample.txt', chomp: true)
     expect(LifeSupportCalculator.oxygen_generator_rating(diagnostic)).to eq(23)
+    expect(LifeSupportCalculator.scrubber_rating(diagnostic)).to eq(10)
+  end
+
+  it "resolves my personal riddle" do
+    diagnostic = File.readlines('./spec/Day03/input.txt', chomp: true)
+    expect(LifeSupportCalculator.oxygen_generator_rating(diagnostic) * LifeSupportCalculator.scrubber_rating(diagnostic)).to eq(4996233)
   end
 
 end
