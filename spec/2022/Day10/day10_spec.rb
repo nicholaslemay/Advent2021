@@ -2,7 +2,7 @@ require_relative '../../spec_helper'
 
 class Compiler
   OPENING_CHARS = %w|< ( { [|
-  EXPECTED_CHARACTER_PAIRS = { '<' => '>', '(' => ')', '{' => '}', '[' => ']'}
+  EXPECTED_CLOSING_MATCHES = { '<' => '>', '(' => ')', '{' => '}', '[' => ']'}
 
   def self.missing_char(line)
     opened_characters = []
@@ -10,7 +10,7 @@ class Compiler
       if OPENING_CHARS.include?(new_character)
         opened_characters << new_character
       else
-        return new_character if new_character != EXPECTED_CHARACTER_PAIRS[opened_characters.pop]
+        return new_character if new_character != EXPECTED_CLOSING_MATCHES[opened_characters.pop]
       end
     end
     nil
