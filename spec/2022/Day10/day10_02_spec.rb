@@ -1,29 +1,49 @@
 require_relative '../../spec_helper'
 require_relative 'day10_spec'
 
-class AutoCompletionScore
-  POINTS = { '>' => 4, '}' => 3, ']' => 2, ')' => 1 }
-
-  def self.score_for(string)
-    string.chars.reduce(0) { |sum, c| sum * 5 + POINTS[c] }
+class AutoCompletionScoreCalculator
+  def self.score_for(file)
+    scores = AutoComplete.lines(File.readlines(file, chomp: true))
+                         .map { |l| AutoCompletionScore.score_for(l) }
+                         .sort
+    scores[scores.length/2]
   end
 end
 
 class AutoComplete
-  EXPECTED_CLOSING_MATCHES = { '<' => '>', '(' => ')', '{' => '}', '[' => ']' }
+  CLOSING_CHARS_FOR_OPENING_CHARACTER = { '<' => '>', '(' => ')', '{' => '}', '[' => ']' }
+
+  def self.lines(lines)
+    lines.map do |l|
+      AutoComplete.line(l)
+      rescue InvalidLine
+    end.compact
+  end
 
   def self.line(line)
     opened_characters = []
     line.chars.each do |new_character|
-      if (new_character == EXPECTED_CLOSING_MATCHES[opened_characters.last])
+      if CLOSING_CHARS_FOR_OPENING_CHARACTER.key?(new_character)
+        opened_characters << new_character
+      elsif new_character == CLOSING_CHARS_FOR_OPENING_CHARACTER[opened_characters.last]
         opened_characters.pop
       else
-        opened_characters << new_character
+        raise InvalidLine
       end
     end
-    opened_characters.reverse.map { |c| EXPECTED_CLOSING_MATCHES[c] }.join
+    opened_characters.reverse.map { |c| CLOSING_CHARS_FOR_OPENING_CHARACTER[c] }.join
+  end
+
+  class InvalidLine < Exception; end
+end
+
+class AutoCompletionScore
+  def self.score_for(missing_characters)
+    points = { '>' => 4, '}' => 3, ']' => 2, ')' => 1 }
+    missing_characters.chars.reduce(0) { |sum, c| sum * 5 + points[c] }
   end
 end
+
 
 RSpec.describe "AutoComplete Score " do
   it 'autocomplete incomplete lines' do
@@ -52,22 +72,12 @@ end
 RSpec.describe "Day 10 part 02" do
 
   it 'solves the sample' do
-    scores = File.readlines('/Users/nick/RubymineProjects/Advent2021/spec/2022/Day10/sample.txt', chomp: true)
-                           .select { |l| Compiler.missing_char(l) == nil }
-                           .map { |l| AutoComplete.line(l) }
-                           .map { |l| AutoCompletionScore.score_for(l) }
-                           .sort
-
-    expect(scores[scores.length/2]).to eq(288957)
+    score = AutoCompletionScoreCalculator.score_for('/Users/nick/RubymineProjects/Advent2021/spec/2022/Day10/sample.txt')
+    expect(score).to eq(288957)
   end
 
   it 'solves the riddle' do
-    scores = File.readlines('/Users/nick/RubymineProjects/Advent2021/spec/2022/Day10/input.txt', chomp: true)
-                 .select { |l| Compiler.missing_char(l) == nil }
-                 .map { |l| AutoComplete.line(l) }
-                 .map { |l| AutoCompletionScore.score_for(l) }
-                 .sort
-
-    expect(scores[scores.length/2]).to eq(2924734236)
+    score = AutoCompletionScoreCalculator.score_for('/Users/nick/RubymineProjects/Advent2021/spec/2022/Day10/input.txt')
+    expect(score).to eq(2924734236)
   end
 end
